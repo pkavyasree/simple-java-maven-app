@@ -26,5 +26,15 @@ pipeline {
                 sh './jenkins/scripts/deliver.sh'
             }
         }
+        stage('Build Downstream job uat'){
+            steps {
+                build 'uat'
+            }
+        }
+        stage('Build Downstream job prod'){
+            steps {
+                build 'prod'
+            }
+        }
     }
 }
