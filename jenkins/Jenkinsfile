@@ -36,5 +36,10 @@ pipeline {
                 build 'prod'
             }
         }
+        stage('Email trigger') {
+            steps {
+                emailext body: 'pipeline jobs dev,uat and prod were success message', subject: 'Build status.', to: 'cloudops990@gmail.com'
+            }
+        }
     }
 }
