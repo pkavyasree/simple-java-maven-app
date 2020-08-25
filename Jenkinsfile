@@ -1,14 +1,22 @@
-node{
-
-    stage('SCM Checkout'){
-    git credentialsId: 'github-pwd', url: 'https://github.com/pkavyasree/simple-java-maven-app.git'
-    }
-    stage('Mvn Package'){
-         def mvnHome = tool name: 'maven', type: 'maven'
-         def mvnCMD = "/usr/share/maven/bin/mvn"
-         sh "${mvnCMD} -f pom.xml clean package"
-     } 
-    stage('output'){
-        sh label: '', script: 'echo  " This Job $JOB_NAME is succesful and its build number is $BUILD_NUMBER ." '
-    }
-}
+pipeline
+{
+    agent any
+    stages
+    {
+        stage('Maven Build')
+        {
+            steps
+            {
+                script
+                {
+                         git credentialsId: 'c810e053-5812-4429-a07f-42c3103d4d01', url: 'https://github.com/majid2709/javaservletlogin.git',branch: 'master'
+					     def mvnHome = tool name: 'maven', type: 'maven'
+                         def mvnCMD = "/usr/local/src/apache-maven/bin/mvn"
+                         sh "${mvnCMD} -f pom.xml clean package"
+                }
+            }
+        }
+    }  
+                
+                 
+                 
