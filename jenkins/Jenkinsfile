@@ -1,44 +1,31 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3-alpine'
-            args '-v /root/.m2:/root/.m2'
-        }
-    }
+    agent any
+
     stages {
-        stage('Build') {
+        stage ('Compile Stage') {
+
             steps {
-                sh 'mvn -B -DskipTests clean package'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
+                withMaven(maven : 'maven_3_5_0') {
+                    sh 'mvn clean compile'
                 }
             }
         }
-        stage('Deliver') {
+
+        stage ('Testing Stage') {
+
             steps {
-                sh './jenkins/scripts/deliver.sh'
+                withMaven(maven : 'maven_3_5_0') {
+                    sh 'mvn test'
+                }
             }
         }
-        stage('Build Downstream job uat'){
+
+
+        stage ('Deployment Stage') {
             steps {
-                build 'uat'
-            }
-        }
-        stage('Build Downstream job prod'){
-            steps {
-                build 'prod'
-            }
-        }
-        stage('Email trigger') {
-            steps {
-                emailext body: 'pipeline jobs dev,uat and prod were success message', subject: 'Build status.', to: 'cloudops990@gmail.com'
+                withMaven(maven : 'maven_3_5_0') {
+                    sh 'mvn deploy'
+                }
             }
         }
     }
