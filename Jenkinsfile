@@ -1,3 +1,5 @@
+@Library('pipeline-library-demo')_
+
 pipeline {
     agent none
     stages {
